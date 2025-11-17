@@ -1,6 +1,6 @@
-function [MAC, Fig1, Fig2] = MAC2(phi1, phi2, Colmap, phi1Name, phi2Name, FontSizeVal, NumFig, ShowText)
+function [CMAC, Fig1, Fig2] = CMAC(phi1, phi2, Colmap, phi1Name, phi2Name, FontSizeVal, NumFig, ShowText)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAC2 function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CMAC function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FUNCTION DESCRIPTION:
 % This function computes the Modal Assurance Criterion (MAC) between
@@ -18,7 +18,7 @@ function [MAC, Fig1, Fig2] = MAC2(phi1, phi2, Colmap, phi1Name, phi2Name, FontSi
 % ShowText = 'yes' or 'no', whether to display MAC values on the plots
 %
 % OUTPUTS:
-% MAC = Modal Assurance Criterion matrix
+% CMAC = Modal Assurance Criterion matrix
 % Fig1 = Handle to 3D MAC figure
 % Fig2 = Handle to 2D MAC figure (empty if NumFig = 1)
 %
@@ -69,18 +69,18 @@ end
 [~, Numphi2] = size(phi2);
 
 % Preallocation of the MAC matrix
-MAC = zeros(Numphi1, Numphi2);
+CMAC = zeros(Numphi1, Numphi2);
 
 % Compution of the MAC matrix
 for i = 1:Numphi1
     for j = 1:Numphi2
-        MAC(i,j) = (abs(phi1(:,i)'*phi2(:,j)))^2/((phi1(:,i)'*phi1(:,i))*(phi2(:,j)'*phi2(:,j)));
+        CMAC(i,j) = (abs(phi1(:,i)'*phi2(:,j)))^2/((phi1(:,i)'*phi1(:,i))*(phi2(:,j)'*phi2(:,j)));
     end
 end
 
 % 3D representation of the MAC
 Fig1 = figure;
-b = bar3(MAC);
+b = bar3(CMAC);
 colormap(Colmap);
 for k = 1:length(b)
     zdata = b(k).ZData;
@@ -88,9 +88,9 @@ for k = 1:length(b)
     b(k).FaceColor = 'interp';
 end
 if strcmpi(ShowText,'yes')
-    textStrings = cellstr(num2str(MAC(:), '%0.2f'));
-    [x, y] = meshgrid(1:size(MAC,2), 1:size(MAC,1));
-    text(x(:), y(:), 1.025*MAC(:), textStrings, ...
+    textStrings = cellstr(num2str(CMAC(:), '%0.2f'));
+    [x, y] = meshgrid(1:size(CMAC,2), 1:size(CMAC,1));
+    text(x(:), y(:), 1.025*CMAC(:), textStrings, ...
         'HorizontalAlignment', 'center', 'FontSize', 10, 'Interpreter','latex');
 end
 box on;
@@ -108,7 +108,7 @@ cb.TickLabelInterpreter = 'latex';
 % 2D representation of the MAC
 if NumFig == 2
     Fig2 = figure;     
-    imagesc(MAC);     
+    imagesc(CMAC);     
     colormap(Colmap);
     axis equal tight;
     xlabel(phi2Name,'interpreter','latex');
@@ -120,12 +120,13 @@ if NumFig == 2
     cb.Label.FontSize = 12;    
     cb.TickLabelInterpreter = 'latex';
     if strcmpi(ShowText,'yes')
-        textStrings = cellstr(num2str(MAC(:), '%0.2f'));
-        [x, y] = meshgrid(1:size(MAC,2), 1:size(MAC,1));
-        text(x(:), y(:), zeros(size(MAC(:))), textStrings, ...
+        textStrings = cellstr(num2str(CMAC(:), '%0.2f'));
+        [x, y] = meshgrid(1:size(CMAC,2), 1:size(CMAC,1));
+        text(x(:), y(:), zeros(size(CMAC(:))), textStrings, ...
             'HorizontalAlignment', 'center', 'FontSize', 10, 'Interpreter','latex');
     end
 else
     Fig2 = [];
 end
 end
+
